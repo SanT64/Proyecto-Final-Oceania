@@ -1,1 +1,10 @@
-
+{
+  "description": "An interactive ocean-learning experience for children ages 6–10 to discover marine animals and habitats, play quizzes, and learn how to protect the sea.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
