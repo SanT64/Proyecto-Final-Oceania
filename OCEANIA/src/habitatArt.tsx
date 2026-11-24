@@ -348,30 +348,37 @@ function Hotspot({
   ring: { cx: number; cy: number; rx: number; ry: number };
   children: ReactNode;
 }) {
+  const width = Math.max(44, ring.rx * 2);
+  const height = Math.max(44, ring.ry * 2);
+
   return (
-    <g
-      className="world-hotspot"
-      role="button"
-      tabIndex={0}
-      aria-label={label}
-      data-spot={id}
-      onClick={() => onSpot(id)}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          onSpot(id);
-        }
-      }}
-    >
-      <ellipse className="hotspot-area" {...ring} />
-      {children}
-      <ellipse className="hotspot-ring" {...ring} />
-      <circle
-        className="hotspot-hint"
-        cx={ring.cx + ring.rx * 0.62}
-        cy={ring.cy - ring.ry * 0.78}
-        r="10"
-      />
+    <g className="world-hotspot" data-spot={id}>
+      <g className="world-hotspot-visual" aria-hidden="true">
+        <ellipse className="hotspot-area" {...ring} />
+        {children}
+        <ellipse className="hotspot-ring" {...ring} />
+        <circle
+          className="hotspot-hint"
+          cx={ring.cx + ring.rx * 0.62}
+          cy={ring.cy - ring.ry * 0.78}
+          r="10"
+        />
+      </g>
+      <foreignObject
+        className="world-hotspot-control"
+        data-spot={id}
+        x={ring.cx - width / 2}
+        y={ring.cy - height / 2}
+        width={width}
+        height={height}
+      >
+        <button
+          type="button"
+          className="world-hotspot-button"
+          aria-label={label}
+          onClick={() => onSpot(id)}
+        />
+      </foreignObject>
     </g>
   );
 }
@@ -430,7 +437,7 @@ function PoppableBubbles({ spots, onSpot }: { spots: SpotCounts; onSpot: (id: st
           <Hotspot
             key={id}
             id={id}
-            label="Burbuja: tócala para reventarla"
+            label="Burbuja interactiva: tócala para reventarla"
             onSpot={onSpot}
             ring={{ cx, cy, rx: r + 14, ry: r + 14 }}
           >
@@ -661,7 +668,7 @@ export function WorldScenery({
       <svg
         className="world-scenery"
         viewBox="0 0 1200 560"
-        preserveAspectRatio="xMidYMid slice"
+        preserveAspectRatio="xMidYMax slice"
         aria-hidden="true"
       >
         <defs>

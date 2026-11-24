@@ -1686,7 +1686,20 @@ function HabitatsMap({
           <path d="M25 30C40 14 60 14 75 30S88 62 75 72C60 86 40 86 25 72S12 44 25 30Z" />
           <path d="M25 30C45 46 55 56 75 72" />
         </svg>
-        <div className="map-floor" />
+        <svg
+          className="map-floor"
+          viewBox="0 0 1200 180"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M0 62C180 25 360 35 530 58C720 84 900 66 1200 28V180H0Z"
+            fill="#c7a476"
+            stroke="#d9bb8c"
+            strokeWidth="5"
+            vectorEffect="non-scaling-stroke"
+          />
+        </svg>
         <div className="map-grid">
           {habitats.map((habitat, index) => (
             <button
@@ -2061,13 +2074,13 @@ function HeroScene() {
         <i />
         <i />
         <i />
-        <b className="hero-coral-staghorn">
-          <AnimalIllustration kind="staghorn" color="#FF8A65" />
-        </b>
-        <b className="hero-coral-fan">
-          <AnimalIllustration kind="seafan" color="#B58AE0" />
-        </b>
       </div>
+      <b className="hero-coral-staghorn">
+        <AnimalIllustration kind="staghorn" color="#FF8A65" />
+      </b>
+      <b className="hero-coral-fan">
+        <AnimalIllustration kind="seafan" color="#B58AE0" />
+      </b>
     </div>
   );
 }
@@ -2284,6 +2297,73 @@ const bubbleFacts: Record<string, string> = {
   rock: "El mero goliat respira el oxígeno del agua con sus branquias.",
 };
 
+const mobileWorldObjects: Record<
+  WorldTheme,
+  { id: string; name: string; label: string; kind?: string; icon?: IconName }[]
+> = {
+  coral: [
+    {
+      id: "coral-fan",
+      name: "Coral abanico",
+      label: "Tocar coral abanico",
+      kind: "seafan",
+    },
+    {
+      id: "coral-branch",
+      name: "Coral ramificado",
+      label: "Tocar coral ramificado",
+      kind: "staghorn",
+    },
+    {
+      id: "anemone",
+      name: "Anémona",
+      label: "Tocar anémona",
+      icon: "leaf",
+    },
+    {
+      id: "coral-brain",
+      name: "Coral cerebro",
+      label: "Tocar coral cerebro",
+      kind: "braincoral",
+    },
+  ],
+  open: [],
+  grass: [
+    {
+      id: "meadow-left",
+      name: "Pradera izquierda",
+      label: "Tocar pradera marina izquierda",
+      icon: "leaf",
+    },
+    {
+      id: "meadow-right",
+      name: "Pradera derecha",
+      label: "Tocar pradera marina derecha",
+      icon: "leaf",
+    },
+    {
+      id: "meadow-far-right",
+      name: "Pradera lejana",
+      label: "Tocar pradera marina lejana",
+      icon: "leaf",
+    },
+  ],
+  rock: [
+    {
+      id: "cave-left",
+      name: "Cueva de estrellas",
+      label: "Explorar cueva de estrellas",
+      icon: "sparkle",
+    },
+    {
+      id: "cave-right",
+      name: "Cueva de conchas",
+      label: "Explorar cueva de conchas",
+      icon: "book",
+    },
+  ],
+};
+
 const reactionStyle: Record<string, string> = {
   dolphin: "spin",
   grouper: "gulp",
@@ -2463,6 +2543,19 @@ function HabitatStage({
         )}
       </div>
 
+      <div className="mobile-habitat-bubbles" aria-label="Burbujas interactivas">
+        {["bubble-1", "bubble-2", "bubble-3"].map((id, bubbleIndex) => (
+          <button
+            key={id}
+            type="button"
+            aria-label={`Burbuja interactiva ${bubbleIndex + 1}: tocar para reventar`}
+            onClick={() => onSpot(id)}
+          >
+            <span aria-hidden="true" />
+          </button>
+        ))}
+      </div>
+
       <div className="habitat-swimmers">
         {habitat.animals.map((kind, position) => {
           const animal = animalData.find((item) => item.kind === kind)!;
@@ -2507,6 +2600,27 @@ function HabitatStage({
             </div>
           );
         })}
+      </div>
+
+      <div className="mobile-habitat-floor" aria-label="Elementos interactivos del fondo marino">
+        <span className="mobile-seabed" aria-hidden="true" />
+        {mobileWorldObjects[habitat.type as WorldTheme].map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            aria-label={item.label}
+            onClick={() => onSpot(item.id)}
+          >
+            <span aria-hidden="true">
+              {item.kind ? (
+                <AnimalIllustration kind={item.kind} color="#f0c26b" />
+              ) : (
+                <Icon name={item.icon ?? "sparkle"} size={34} />
+              )}
+            </span>
+            <small>{item.name}</small>
+          </button>
+        ))}
       </div>
 
       {guideOpen && (
@@ -3522,7 +3636,17 @@ function App() {
                   </div>
                 </div>
                 <HeroScene />
-                <div className="wave-divider" />
+                <svg
+                  className="wave-divider"
+                  viewBox="0 0 1440 32"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M0 12C120 4 240 18 360 10S600 16 720 9S960 17 1080 9S1320 15 1440 8V32H0Z"
+                    fill="currentColor"
+                  />
+                </svg>
               </section>
             )}
 
@@ -4617,7 +4741,7 @@ function App() {
                           setHabitatChallengeDone(false);
                         }}
                       >
-                        <Icon name="arrow" size={16} /> Explorar {selectedHome.name}
+                        Explorar {selectedHome.name} <Icon name="arrow" size={16} />
                       </button>
                     )}
                   </div>
