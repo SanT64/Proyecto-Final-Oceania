@@ -1,4 +1,6 @@
 # OCEANÍA 🌊
+**Hecho Por:** Santaigo Arif Tolentino Zambrano · Alfredo Olivares Ibarra · Joana Estefanny del Angel Perez
+
 ### Plataforma web educativa sobre la vida marina
 
 **Sitio web:** [https://proyectooceania.vercel.app/](https://proyectooceania.vercel.app/)
