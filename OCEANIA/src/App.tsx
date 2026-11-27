@@ -1,4 +1,5 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import dolphinPhoto from "./assets/photos/dolphin.webp";
 import turtlePhoto from "./assets/photos/turtle.webp";
 import {
@@ -1767,8 +1768,70 @@ function OceanCleanupGame({
   const [paused, setPaused] = useState(false);
   const [listOpen, setListOpen] = useState(false);
   const [narratedText, setNarratedText] = useState("");
+  const cleanupInfoDialogRef = useRef<HTMLDivElement>(null);
+  const cleanupGameRef = useRef<HTMLElement>(null);
+  const collectButtonRef = useRef<HTMLButtonElement>(null);
+  const continueButtonRef = useRef<HTMLButtonElement>(null);
+  const selectionTriggerRef = useRef<HTMLElement | null>(null);
   const trashTotal = cleanupItems.filter((item) => item.type === "trash").length;
   const complete = collected.length === trashTotal;
+
+  useEffect(() => {
+    const previousDocumentOverflow = document.documentElement.style.overflow;
+    const previousBodyOverflow = document.body.style.overflow;
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.documentElement.style.overflow = previousDocumentOverflow;
+      document.body.style.overflow = previousBodyOverflow;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!selected) return;
+
+    const dialog = cleanupInfoDialogRef.current;
+    const initialFocus =
+      selected.type === "trash" ? collectButtonRef.current : continueButtonRef.current;
+    initialFocus?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setSelected(null);
+        return;
+      }
+      if (event.key !== "Tab" || !dialog) return;
+
+      const focusable = Array.from(
+        dialog.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      );
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      if (selectionTriggerRef.current?.isConnected) {
+        selectionTriggerRef.current.focus();
+      } else {
+        cleanupGameRef.current?.focus();
+      }
+    };
+  }, [selected]);
 
   const narrate = (text: string) => {
     setNarratedText(text);
@@ -1790,6 +1853,8 @@ function OceanCleanupGame({
   };
 
   const identifyItem = (item: (typeof cleanupItems)[number]) => {
+    selectionTriggerRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
     setSelected(item);
     setNarratedText("");
     if (item.type === "trash" && !identified.includes(item.id)) {
@@ -1805,6 +1870,8 @@ function OceanCleanupGame({
       aria-labelledby="cleanup-title"
     >
       <article
+        ref={cleanupGameRef}
+        tabIndex={-1}
         className={`cleanup-game${complete ? " ocean-clean" : ""}${paused ? " cleanup-paused" : ""}`}
       >
         <header className="cleanup-toolbar">
@@ -1924,43 +1991,61 @@ function OceanCleanupGame({
           )}
         </div>
 
-        {selected && (
-          <div className={`cleanup-info ${selected.type}`} role="status" aria-live="polite">
-            <span className="cleanup-info-icon">
-              <Icon name={selected.type === "trash" ? "trash" : "check"} size={28} />
-            </span>
-            <div>
-              <span className="kicker">
-                {selected.type === "trash" ? "RESIDUO ENCONTRADO" : "AMIGO DEL ECOSISTEMA"}
-              </span>
-              <h3>{selected.name}</h3>
-              <p>{selected.explanation}</p>
-              <button
-                className="narrate-button"
-                onClick={() => narrate(`${selected.name}. ${selected.explanation}`)}
+        {selected &&
+          createPortal(
+            <div className="cleanup-info-backdrop">
+              <div
+                ref={cleanupInfoDialogRef}
+                className={`cleanup-info ${selected.type}`}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="cleanup-info-title"
+                aria-describedby="cleanup-info-description"
+                onClick={(event) => event.stopPropagation()}
               >
-                <Icon name="play" size={16} /> Escuchar explicación
-              </button>
-              {narratedText && (
-                <p className="live-audio-transcript" role="status" aria-live="polite">
-                  Transcripción de audio: [{narratedText}]
-                </p>
-              )}
-            </div>
-            <div className="cleanup-info-actions">
-              {selected.type === "trash" ? (
-                <button className="collect-button" onClick={collectSelected}>
-                  <Icon name="check" size={19} /> Recoger
-                </button>
-              ) : (
-                <strong>
-                  <Icon name="check" size={19} /> Déjalo en su hogar
-                </strong>
-              )}
-              <button onClick={() => setSelected(null)}>Seguir explorando</button>
-            </div>
-          </div>
-        )}
+                <span className="cleanup-info-icon">
+                  <Icon name={selected.type === "trash" ? "trash" : "check"} size={28} />
+                </span>
+                <div>
+                  <span className="kicker">
+                    {selected.type === "trash" ? "RESIDUO ENCONTRADO" : "AMIGO DEL ECOSISTEMA"}
+                  </span>
+                  <h3 id="cleanup-info-title">{selected.name}</h3>
+                  <p id="cleanup-info-description">{selected.explanation}</p>
+                  {narratedText && (
+                    <p className="live-audio-transcript" role="status" aria-live="polite">
+                      Transcripción de audio: [{narratedText}]
+                    </p>
+                  )}
+                </div>
+                <div className="cleanup-info-actions">
+                  {selected.type === "trash" ? (
+                    <button
+                      ref={collectButtonRef}
+                      className="collect-button"
+                      onClick={collectSelected}
+                    >
+                      <Icon name="check" size={19} /> Recoger
+                    </button>
+                  ) : (
+                    <strong>
+                      <Icon name="check" size={19} /> Déjalo en su hogar
+                    </strong>
+                  )}
+                  <button
+                    className="narrate-button"
+                    onClick={() => narrate(`${selected.name}. ${selected.explanation}`)}
+                  >
+                    <Icon name="play" size={16} /> Escuchar explicación
+                  </button>
+                  <button ref={continueButtonRef} onClick={() => setSelected(null)}>
+                    Seguir explorando
+                  </button>
+                </div>
+              </div>
+            </div>,
+            document.body,
+          )}
 
         {listOpen && (
           <div className="cleanup-list-backdrop" onClick={() => setListOpen(false)}>

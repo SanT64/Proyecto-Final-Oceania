@@ -12361,3 +12361,677 @@ html {
     text-align: center;
   }
 }
+
+/* Cleanup selection appears as an accessible overlay instead of extending the page. */
+.cleanup-info-backdrop {
+  position: fixed;
+  z-index: 400;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: max(20px, env(safe-area-inset-top)) 20px max(20px, env(safe-area-inset-bottom));
+  background: #053654d9;
+}
+.cleanup-info-backdrop .cleanup-info {
+  width: min(680px, 100%);
+  min-height: 0;
+  max-height: calc(100dvh - 40px);
+  padding: 24px;
+  grid-template-columns: 64px minmax(0, 1fr);
+  border: 3px solid #ffd166;
+  border-radius: 24px;
+  background: #fffdf7;
+  box-shadow: 0 24px 64px #05365480;
+}
+.cleanup-info-backdrop .cleanup-info-actions {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.cleanup-info-backdrop :is(.narrate-button, .cleanup-info-actions > button) {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+@media (max-width: 639px) {
+  .world-number,
+  .game-card .kicker,
+  .cleanup-toolbar .kicker,
+  .cleanup-info .kicker {
+    color: #053654 !important;
+    font-size: 0.875rem !important;
+    font-weight: 800;
+  }
+  .game-card .kicker {
+    display: inline-block;
+    padding: 4px 9px;
+    border-radius: 9999px;
+    background: #fffdf7;
+  }
+
+  .habitat-panorama .world-title-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: 100%;
+    max-width: 100%;
+    padding: 10px 14px;
+    border-radius: 20px;
+    text-align: center;
+  }
+  .habitat-panorama .world-title-row h2 {
+    width: 100%;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    text-align: center;
+  }
+  .habitat-world-toolbar {
+    padding-top: calc(10px + env(safe-area-inset-top)) !important;
+  }
+
+  .cleanup-info-backdrop {
+    padding: calc(12px + env(safe-area-inset-top)) 12px calc(12px + env(safe-area-inset-bottom));
+  }
+  .cleanup-info-backdrop .cleanup-info {
+    max-height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    padding: 16px;
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 12px;
+    border-radius: 20px;
+  }
+  .cleanup-info-backdrop .cleanup-info-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+  }
+  .cleanup-info-backdrop .cleanup-info h3 {
+    font-size: 22px;
+    line-height: 1.15;
+  }
+  .cleanup-info-backdrop .cleanup-info p {
+    line-height: 1.35;
+  }
+  .cleanup-info-backdrop .cleanup-info-actions {
+    gap: 8px;
+  }
+}
+
+/* Final modal centering and high-legibility labels. */
+.cleanup-info-backdrop {
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(5, 54, 84, 0.8);
+}
+.cleanup-info-backdrop .cleanup-info {
+  margin: 0;
+}
+.cleanup-info-backdrop .cleanup-info-actions {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.cleanup-info-backdrop #cleanup-info-description {
+  color: #053654;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.world-number,
+.game-card .kicker,
+.cleanup-toolbar .kicker,
+.cleanup-info .kicker {
+  color: #053654 !important;
+  opacity: 1;
+  font-size: 15px !important;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+.game-card .kicker {
+  display: inline-block;
+  padding: 4px 9px;
+  border-radius: 9999px;
+  background: #ffffff;
+}
+
+@media (max-width: 639px) {
+  .cleanup-info-backdrop {
+    align-items: center;
+    justify-content: center;
+    padding: max(20px, env(safe-area-inset-top), env(safe-area-inset-bottom)) 20px;
+  }
+  .cleanup-info-backdrop .cleanup-info-actions {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .cleanup-info-backdrop .cleanup-info-actions > :is(button, strong) {
+    width: 100%;
+    min-height: 48px;
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .habitat-panorama .world-title-row {
+    border: 2px solid #053654;
+    background: #ffffff;
+  }
+  .habitat-panorama .world-title-row .world-number {
+    color: #053654 !important;
+    opacity: 1;
+    font-size: 15px !important;
+    font-weight: 800;
+  }
+  .habitat-panorama .world-title-row h2 {
+    color: #053654;
+    font-size: 22px;
+    font-weight: 800;
+  }
+  .habitat-world-toolbar {
+    padding-top: max(48px, calc(env(safe-area-inset-top) + 36px)) !important;
+  }
+}
+
+/* The cleanup mission always fits one fixed viewport. */
+.cleanup-backdrop {
+  width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+}
+.cleanup-game {
+  width: min(1380px, 100%);
+  height: 100dvh;
+  max-height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.cleanup-game .cleanup-toolbar,
+.cleanup-game .cleanup-progress-area {
+  flex: 0 0 auto;
+}
+.cleanup-game .cleanup-scene {
+  flex: 1 1 auto;
+  min-height: 0 !important;
+  height: 100% !important;
+}
+
+/* This portal is mounted directly under body, outside the clipped game. */
+.cleanup-info-backdrop {
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(env(safe-area-inset-top, 16px) + 28px) 16px
+    calc(env(safe-area-inset-bottom, 16px) + 28px);
+  overflow: hidden;
+  background-color: rgba(5, 54, 84, 0.82);
+}
+.cleanup-info-backdrop .cleanup-info {
+  margin: auto;
+  max-height: calc(100dvh - 110px);
+  overflow-y: auto;
+}
+
+@media (max-width: 639px) {
+  .cleanup-game .cleanup-toolbar {
+    padding-top: max(12px, env(safe-area-inset-top));
+  }
+  .cleanup-info-backdrop .cleanup-info-actions > :is(button, strong) {
+    width: 100%;
+    min-height: 48px;
+    color: #053654 !important;
+  }
+  .cleanup-info-backdrop .cleanup-info-actions .collect-button {
+    border-color: #053654 !important;
+    background: #ffd166 !important;
+    color: #053654 !important;
+  }
+}
+
+/* Final compact, fixed cleanup-game layout and consistent habitat labels. */
+.world-number,
+.game-card .kicker,
+.cleanup-toolbar .kicker,
+.cleanup-info .kicker {
+  color: #053654 !important;
+  opacity: 1 !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.05em !important;
+}
+
+.cleanup-backdrop,
+.cleanup-game {
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+}
+.cleanup-game {
+  display: flex;
+  flex-direction: column;
+}
+.cleanup-game .cleanup-toolbar,
+.cleanup-game .cleanup-progress-area {
+  flex: 0 0 auto;
+}
+.cleanup-game .cleanup-scene {
+  flex: 1 1 auto;
+  min-height: 0 !important;
+  height: 100% !important;
+}
+.cleanup-toolbar,
+.habitat-world-toolbar {
+  padding-top: 12px;
+}
+
+.cleanup-info-backdrop {
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: rgba(5, 54, 84, 0.82);
+}
+.cleanup-info-backdrop .cleanup-info {
+  margin: auto;
+}
+.cleanup-info-backdrop .cleanup-info .kicker {
+  color: #053654 !important;
+  opacity: 1 !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+}
+.cleanup-info-backdrop .cleanup-info h3,
+.cleanup-info-backdrop #cleanup-info-description {
+  color: #053654;
+  opacity: 1;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+@media (max-width: 639px) {
+  .habitat-world-toolbar {
+    padding-top: max(12px, env(safe-area-inset-top)) !important;
+  }
+  .habitat-panorama .world-title-row {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 10px 14px;
+    border: 2px solid #053654;
+    border-radius: 20px;
+    background: #ffffff;
+    text-align: center;
+  }
+  .habitat-panorama .world-title-row .world-number {
+    color: #053654 !important;
+    opacity: 1 !important;
+    font-size: 15px !important;
+    font-weight: 800 !important;
+  }
+  .habitat-panorama .world-title-row h2 {
+    width: 100%;
+    max-width: 100%;
+    color: #053654;
+    font-size: 22px;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+    text-align: center;
+  }
+
+  .cleanup-game .cleanup-toolbar {
+    min-height: 0;
+    padding: max(12px, env(safe-area-inset-top)) 10px 8px;
+    grid-template-columns: minmax(160px, 1fr) minmax(0, 0.82fr);
+    gap: 6px 8px;
+  }
+  .cleanup-game .cleanup-toolbar > div:nth-child(2) {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+  .cleanup-game .cleanup-toolbar h2 {
+    margin-top: 0;
+    font-size: 20px;
+    line-height: 1.1;
+  }
+  .cleanup-game .cleanup-toolbar > button {
+    grid-column: 1;
+    grid-row: 2;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    border-color: #053654;
+    background: #053654;
+    color: #ffffff !important;
+    opacity: 1;
+    font-size: 14px !important;
+    white-space: nowrap;
+  }
+  .cleanup-game .cleanup-toolbar > button svg {
+    flex: 0 0 auto;
+  }
+  .cleanup-game .cleanup-controls {
+    grid-column: 2;
+    grid-row: 2;
+    width: 100%;
+    gap: 6px;
+  }
+  .cleanup-game .cleanup-controls button,
+  .cleanup-game .cleanup-controls button:first-child,
+  .cleanup-game .cleanup-controls button:last-child {
+    min-width: 0;
+    min-height: 44px;
+    padding: 6px;
+    font-size: 11px;
+    line-height: 1.1;
+  }
+
+  .cleanup-game .cleanup-progress-area {
+    min-height: 0;
+    padding: 7px 10px;
+    gap: 5px;
+  }
+  .cleanup-game .cleanup-progress-copy {
+    min-width: 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .cleanup-game .cleanup-progress-copy strong {
+    font-size: 15px;
+  }
+  .cleanup-game .cleanup-progress-copy span {
+    margin: 0;
+    font-size: 11px;
+    text-align: right;
+  }
+  .cleanup-game .cleanup-progress {
+    height: 12px;
+  }
+  .cleanup-game .guardian-badges {
+    width: 100%;
+    gap: 5px;
+  }
+  .cleanup-game .guardian-badges > span {
+    width: auto;
+    height: 38px;
+    flex: 1 1 0;
+    flex-direction: row;
+    gap: 4px;
+    border-radius: 10px;
+  }
+
+  .cleanup-game .cleanup-item.trash {
+    width: 72px;
+    height: 72px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .cleanup-game .cleanup-bottle {
+    top: 20%;
+    right: auto;
+    left: 3%;
+  }
+  .cleanup-game .cleanup-bag {
+    top: 20%;
+    right: 3%;
+    left: auto;
+  }
+  .cleanup-game .cleanup-can {
+    top: 43%;
+    right: auto;
+    left: 3%;
+  }
+  .cleanup-game .cleanup-net {
+    top: 34%;
+    right: 3%;
+    left: auto;
+    width: 84px;
+    height: 76px;
+  }
+  .cleanup-game .cleanup-wrapper {
+    top: 59%;
+    right: auto;
+    left: 3%;
+  }
+  .cleanup-game .cleanup-game-fish {
+    top: 2%;
+    left: 37.5%;
+    width: 80px;
+    height: 54px;
+  }
+  .cleanup-game .cleanup-game-turtle {
+    top: 33%;
+    right: auto;
+    left: 34%;
+    width: 100px;
+    height: 65px;
+  }
+  .cleanup-game .cleanup-game-coral {
+    top: auto;
+    bottom: 12%;
+    left: 38%;
+    width: 70px;
+    height: 80px;
+  }
+  .cleanup-game .cleanup-game-seaweed {
+    top: auto;
+    right: 4%;
+    bottom: 12%;
+    width: 60px;
+    height: 85px;
+  }
+  .cleanup-game .cleanup-instruction {
+    bottom: 4px;
+    width: calc(100% - 12px);
+    min-height: 36px;
+    padding: 6px 10px;
+    justify-content: center;
+    font-size: 11px;
+    line-height: 1.25;
+    text-align: center;
+  }
+
+  .cleanup-info-backdrop .cleanup-info-actions {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .cleanup-info-backdrop .cleanup-info-actions > :is(button, strong) {
+    width: 100%;
+    min-height: 48px;
+  }
+}
+
+/* Full-bleed cleanup mission and its compact two-row mobile toolbar. */
+.cleanup-backdrop {
+  width: 100vw;
+  max-width: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.cleanup-game {
+  width: 100vw;
+  max-width: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.cleanup-game .cleanup-scene {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0 !important;
+}
+
+@media (max-width: 639px) {
+  .cleanup-game .cleanup-toolbar {
+    grid-template-columns: minmax(145px, auto) minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    gap: 8px 10px;
+    padding-inline: 10px;
+  }
+  .cleanup-game .cleanup-toolbar > button {
+    grid-column: 1;
+    grid-row: 1;
+    width: auto;
+    min-width: 0;
+    min-height: 48px;
+    padding: 10px 14px;
+    font-size: 14px !important;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .cleanup-game .cleanup-toolbar > div:nth-child(2) {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    text-align: left;
+  }
+  .cleanup-game .cleanup-toolbar > div:nth-child(2) .kicker {
+    font-size: 11px !important;
+    white-space: nowrap;
+  }
+  .cleanup-game .cleanup-toolbar h2 {
+    font-size: clamp(14px, 4.3vw, 20px);
+    white-space: nowrap;
+  }
+  .cleanup-game .cleanup-controls {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .cleanup-game .cleanup-controls button,
+  .cleanup-game .cleanup-controls button:first-child,
+  .cleanup-game .cleanup-controls button:last-child {
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .cleanup-game .cleanup-item.trash {
+    min-width: 48px;
+    min-height: 48px;
+  }
+  .cleanup-game .cleanup-game-fish {
+    top: 22%;
+    left: 28%;
+    width: 105px;
+    height: 70px;
+  }
+  .cleanup-game .cleanup-game-turtle {
+    top: 38%;
+    right: 14%;
+    left: auto;
+    width: 120px;
+    height: 78px;
+  }
+  .cleanup-game .cleanup-bottle {
+    top: 12%;
+    left: 6%;
+  }
+  .cleanup-game .cleanup-bag {
+    top: 16%;
+    right: 6%;
+  }
+  .cleanup-game .cleanup-can {
+    top: 48%;
+    left: 6%;
+  }
+  .cleanup-game .cleanup-net {
+    top: 58%;
+    right: 5%;
+  }
+  .cleanup-game .cleanup-wrapper {
+    top: 59%;
+    left: 34%;
+  }
+  .cleanup-game .cleanup-game-coral,
+  .cleanup-game .cleanup-game-seaweed {
+    bottom: 2%;
+  }
+}
+
+/* Desktop cleanup scene is true viewport-width with a water-colored fallback. */
+@media (min-width: 640px) {
+  .cleanup-backdrop {
+    left: 0;
+    right: 0;
+    width: 100vw;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: #0e7c9b;
+  }
+  .cleanup-game {
+    width: 100vw;
+    max-width: none;
+    height: 100dvh;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    overflow: hidden;
+    background: #0e7c9b;
+  }
+  .cleanup-game .cleanup-scene {
+    width: 100vw;
+    max-width: none;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    align-self: stretch;
+    background-color: #0e7c9b;
+    background-size: 100% 100%;
+  }
+  .cleanup-game .cleanup-rays {
+    width: 100%;
+    height: 100%;
+  }
+}
