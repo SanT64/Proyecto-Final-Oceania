@@ -1,6 +1,7 @@
 {
-  "name": "figma-make-app",
+  "name": "oceania-educativa",
   "version": "1.0.0",
+  "description": "OCEANÍA: plataforma educativa marina accesible con conformidad WCAG 2.2 Nivel AA.",
   "private": true,
   "type": "module",
   "scripts": {
